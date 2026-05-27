@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyBiz Tracker – Small Business Finance Manager</title>
+  <meta name="description" content="Track your business expenses, sales, stock and profits easily. Built for Kenyan small business owners." />
+
+  <!-- Google Fonts: Sora (headings) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js CDN - used for charts on the Reports page -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Our external stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- APP SHELL: wraps sidebar + main content -->
+<div class="app-shell">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">💼</div>
+      <div>
+        <div class="logo-text">My<span>Biz</span> Tracker</div>
+        <div class="logo-sub">Business Finance Manager</div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+    </nav>
+
+    <nav class="nav-section">
+      <div class="nav-section-label">Manage</div>
+      <div class="nav-item" data-page="expenses" onclick="navigate('expenses')">
+        <span class="nav-icon">💸</span> Expenses
+      </div>
+      <div class="nav-item" data-page="sales" onclick="navigate('sales')">
+        <span class="nav-icon">🛒</span> Sales
+      </div>
+      <div class="nav-item" data-page="stock" onclick="navigate('stock')">
+        <span class="nav-icon">📦</span> Stock / Inventory
+      </div>
+    </nav>
+
+    <nav class="nav-section">
+      <div class="nav-section-label">Insights</div>
+      <div class="nav-item" data-page="profit" onclick="navigate('profit')">
+        <span class="nav-icon">📈</span> Profit Calculator
+      </div>
+      <div class="nav-item" data-page="reports" onclick="navigate('reports')">
+        <span class="nav-icon">📋</span> Reports &amp; Analytics
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark Mode</span>
+        <div class="toggle-track" id="toggleTrack">
+          <div class="toggle-thumb"></div>
+        </div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Dark overlay shown behind sidebar on mobile -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="openSidebar()">☰</button>
+      <div>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="topbar-subtitle">MyBiz Tracker – KES</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="currentDate"></div>
+      </div>
+    </header>
+
+    <!-- script.js injects page HTML here -->
+    <div id="pageContainer" style="display:flex; flex-direction:column; align-items:flex-start;"></div>
+  </div>
+</div>
+
+<!-- Toast popup messages -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Delete confirmation popup -->
+<div class="modal-bg" id="confirmModal">
+  <div class="modal">
+    <h3>⚠️ Confirm Delete</h3>
+    <p id="confirmMessage" style="color:var(--text2);font-size:14px;">Are you sure you want to delete this record? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load JS last so the DOM is fully ready when script runs -->
+<script src="script.js"></script>
+</body>
+</html>

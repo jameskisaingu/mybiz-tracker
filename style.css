@@ -1,0 +1,678 @@
+/* ================================================================
+   MYBIZ TRACKER — style.css
+   All visual styling for the application.
+   Organised into clearly labelled sections.
+================================================================ */
+
+/* ----------------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (Design Tokens)
+   These variables are used everywhere in the stylesheet so that
+   swapping the theme (dark ↔ light) only needs one class change.
+---------------------------------------------------------------- */
+:root {
+  /* Backgrounds (dark theme default) */
+  --bg:          #0f1117;   /* page background */
+  --bg2:         #181c27;   /* sidebar background */
+  --bg3:         #1e2335;   /* input/table header background */
+  --surface:     #242940;   /* card background */
+  --surface2:    #2d3350;   /* hover / secondary surface */
+
+  /* Borders */
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+
+  /* Brand / accent colours */
+  --accent:      #00e5a0;   /* primary green (profit, success) */
+  --accent2:     #00b87a;   /* darker green for hover */
+  --accent-glow: rgba(0,229,160,0.18);
+
+  /* Semantic colours */
+  --warn:        #ff7043;   /* red-orange (expenses, danger) */
+  --blue:        #4fc3f7;   /* stock, info */
+  --purple:      #b39ddb;   /* transactions */
+  --gold:        #ffd54f;   /* units / inventory */
+
+  /* Text */
+  --text:        #e8ecf5;   /* primary text */
+  --text2:       #9aa3bd;   /* secondary / label text */
+  --text3:       #5a6278;   /* muted / placeholder text */
+
+  /* Shape */
+  --radius:      14px;
+  --radius-sm:   8px;
+
+  /* Shadows */
+  --shadow:      0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:   0 8px 40px rgba(0,0,0,0.5);
+
+  /* Typography */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Layout */
+  --nav-w:       240px;     /* sidebar width */
+
+  /* Animation */
+  --transition:  0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ----------------------------------------------------------------
+   2. LIGHT MODE OVERRIDES
+   Adding class="light" to <body> switches every token at once.
+---------------------------------------------------------------- */
+body.light {
+  --bg:        #f0f2f9;
+  --bg2:       #e4e7f2;
+  --bg3:       #d8dced;
+  --surface:   #ffffff;
+  --surface2:  #f5f6fc;
+  --border:    rgba(0,0,0,0.08);
+  --border2:   rgba(0,0,0,0.14);
+  --text:      #1a1e30;
+  --text2:     #4a5068;
+  --text3:     #8891aa;
+  --shadow:    0 4px 24px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+}
+
+/* ----------------------------------------------------------------
+   3. CSS RESET & BASE STYLES
+---------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+/* Reset browser defaults for interactive elements */
+button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+input, select, textarea { font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+
+/* ----------------------------------------------------------------
+   4. CUSTOM SCROLLBAR
+---------------------------------------------------------------- */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg2); }
+::-webkit-scrollbar-thumb  { background: var(--surface2); border-radius: 99px; }
+
+/* ----------------------------------------------------------------
+   5. APP LAYOUT  (sidebar + main content side by side)
+---------------------------------------------------------------- */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ----------------------------------------------------------------
+   6. SIDEBAR
+---------------------------------------------------------------- */
+.sidebar {
+  width: var(--nav-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;        /* stays on screen while main content scrolls */
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 200;
+  transition: transform var(--transition);
+  overflow-y: auto;
+}
+
+/* Logo area at the top of the sidebar */
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar-logo .logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.sidebar-logo .logo-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--text);
+  line-height: 1.2;
+}
+.sidebar-logo .logo-text span { color: var(--accent); }
+.sidebar-logo .logo-sub {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Nav section wrappers */
+.nav-section { padding: 12px 10px 0; }
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 10px 6px;
+}
+
+/* Individual nav links */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 2px;
+}
+.nav-item:hover  { background: var(--surface); color: var(--text); }
+.nav-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 600; }
+.nav-item .nav-icon { font-size: 18px; flex-shrink: 0; }
+
+/* Theme toggle at the very bottom of the sidebar */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 10px;
+  border-top: 1px solid var(--border);
+}
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 500;
+  transition: background var(--transition);
+  background: none;
+  border: none;
+  width: 100%;
+}
+.theme-toggle:hover { background: var(--surface); color: var(--text); }
+
+/* The pill-shaped on/off switch */
+.toggle-track {
+  width: 32px; height: 18px;
+  background: var(--surface2);
+  border-radius: 99px;
+  margin-left: auto;
+  position: relative;
+  transition: background var(--transition);
+}
+.toggle-track.on { background: var(--accent2); }
+.toggle-thumb {
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px; left: 2px;
+  transition: transform var(--transition);
+}
+.toggle-track.on .toggle-thumb { transform: translateX(14px); }
+
+/* ----------------------------------------------------------------
+   7. MOBILE OVERLAY
+   Shown as a dark backdrop behind the open sidebar on small screens.
+---------------------------------------------------------------- */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+  backdrop-filter: blur(2px);
+}
+.overlay.active { display: block; }
+
+/* ----------------------------------------------------------------
+   8. MAIN CONTENT AREA
+---------------------------------------------------------------- */
+.main-content {
+  margin-left: var(--nav-w);   /* offset by sidebar width */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ----------------------------------------------------------------
+   9. TOP BAR
+---------------------------------------------------------------- */
+.topbar {
+  position: sticky; top: 0;   /* stays at top when scrolling */
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topbar-hamburger {
+  display: none;               /* hidden on desktop, shown on mobile */
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 22px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.topbar-hamburger:hover { background: var(--surface); }
+.topbar-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+.topbar-subtitle { font-size: 12px; color: var(--text3); }
+.topbar-right    { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-date {
+  font-size: 12px;
+  color: var(--text3);
+  background: var(--surface);
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+}
+
+/* ----------------------------------------------------------------
+   10. PAGE WRAPPER
+---------------------------------------------------------------- */
+.page {
+  padding: 28px 28px 40px;
+  max-width: 1200px;
+  width: 100%;
+  animation: fadeUp 0.3s ease;   /* smooth entrance on navigation */
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-header   { margin-bottom: 24px; }
+.page-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.page-desc { font-size: 14px; color: var(--text2); }
+
+/* ----------------------------------------------------------------
+   11. STAT CARDS  (the big summary numbers at the top of pages)
+---------------------------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+/* Coloured top stripe — colour set via --card-accent */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--accent));
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat-card .stat-icon  { font-size: 24px; margin-bottom: 4px; }
+.stat-card .stat-label {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text3);
+}
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 800;
+  color: var(--text); line-height: 1;
+}
+.stat-card .stat-sub { font-size: 12px; color: var(--text3); }
+
+/* Colour variants — each sets --card-accent */
+.stat-card.green  { --card-accent: var(--accent); }
+.stat-card.red    { --card-accent: var(--warn); }
+.stat-card.blue   { --card-accent: var(--blue); }
+.stat-card.purple { --card-accent: var(--purple); }
+.stat-card.gold   { --card-accent: var(--gold); }
+
+/* ----------------------------------------------------------------
+   12. GENERIC CARD / PANEL
+---------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  color: var(--text);
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title span { color: var(--accent); }
+
+/* ----------------------------------------------------------------
+   13. FORM ELEMENTS
+---------------------------------------------------------------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.form-group  { display: flex; flex-direction: column; gap: 6px; }
+.form-label  {
+  font-size: 12px; font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.form-input {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  outline: none;
+}
+select.form-input { cursor: pointer; }
+
+/* ----------------------------------------------------------------
+   14. BUTTONS
+---------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  gap: 7px;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600;
+  transition: all var(--transition);
+  cursor: pointer; border: none;
+  white-space: nowrap;
+}
+/* Green primary button */
+.btn-primary { background: var(--accent); color: var(--bg); }
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+/* Neutral secondary button */
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border2);
+}
+.btn-secondary:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+/* Red danger button */
+.btn-danger {
+  background: rgba(255,112,67,0.15);
+  color: var(--warn);
+  border: 1px solid rgba(255,112,67,0.3);
+}
+.btn-danger:hover { background: rgba(255,112,67,0.25); }
+/* Size modifiers */
+.btn-sm   { padding: 6px 12px; font-size: 12px; }
+.btn-icon { padding: 8px; border-radius: var(--radius-sm); }
+
+/* ----------------------------------------------------------------
+   15. DATA TABLE
+---------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; border-radius: var(--radius-sm); }
+table       { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead tr    { background: var(--bg3); }
+thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+tbody tr    { border-bottom: 1px solid var(--border); transition: background var(--transition); }
+tbody tr:hover { background: var(--surface2); }
+tbody td    { padding: 12px 16px; color: var(--text2); }
+tbody td:first-child { color: var(--text); font-weight: 500; }
+
+/* ----------------------------------------------------------------
+   16. BADGE / TAG PILLS
+---------------------------------------------------------------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-green  { background: rgba(0,229,160,0.15);   color: var(--accent); }
+.badge-red    { background: rgba(255,112,67,0.15);  color: var(--warn); }
+.badge-blue   { background: rgba(79,195,247,0.15);  color: var(--blue); }
+.badge-purple { background: rgba(179,157,219,0.15); color: var(--purple); }
+.badge-gold   { background: rgba(255,213,79,0.15);  color: var(--gold); }
+
+/* ----------------------------------------------------------------
+   17. FILTER / SEARCH BAR
+---------------------------------------------------------------- */
+.filter-bar {
+  display: flex; flex-wrap: wrap;
+  gap: 10px; margin-bottom: 20px;
+  align-items: center;
+}
+.filter-bar .form-input               { max-width: 220px; }
+.filter-bar .form-input[type="search"]{ flex: 1; min-width: 160px; max-width: 320px; }
+
+/* ----------------------------------------------------------------
+   18. EMPTY STATE (shown when no records exist yet)
+---------------------------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text3);
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 {
+  font-family: var(--font-display); font-size: 18px;
+  color: var(--text2); margin-bottom: 6px;
+}
+.empty-state p { font-size: 14px; }
+
+/* ----------------------------------------------------------------
+   19. CHART CARDS (used on Reports page)
+---------------------------------------------------------------- */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.chart-card .chart-title {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 16px;
+}
+.chart-wrap { position: relative; height: 220px; }
+
+/* ----------------------------------------------------------------
+   20. TOAST NOTIFICATIONS (pop-up messages)
+---------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 500;
+  min-width: 240px; max-width: 360px;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+  pointer-events: all;
+}
+.toast.success { border-left: 4px solid var(--accent); }
+.toast.error   { border-left: 4px solid var(--warn); }
+.toast.info    { border-left: 4px solid var(--blue); }
+@keyframes slideIn {
+  from { opacity:0; transform: translateX(40px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+@keyframes fadeOut {
+  to { opacity:0; transform: translateX(40px); }
+}
+
+/* ----------------------------------------------------------------
+   21. MODAL / DIALOG BOX
+---------------------------------------------------------------- */
+.modal-bg {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 500;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 480px; width: 100%;
+  animation: fadeUp 0.25s ease;
+  box-shadow: var(--shadow-lg);
+}
+.modal h3 {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700;
+  margin-bottom: 16px;
+}
+.modal-actions {
+  display: flex; gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+/* ----------------------------------------------------------------
+   22. PERIOD TABS (Daily / Weekly / Monthly / All)
+---------------------------------------------------------------- */
+.period-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.period-tab {
+  padding: 7px 16px;
+  border-radius: 99px;
+  font-size: 13px; font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.period-tab.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+/* ----------------------------------------------------------------
+   23. PROFIT COLOUR HELPERS
+---------------------------------------------------------------- */
+.profit-positive { color: var(--accent); }
+.profit-negative { color: var(--warn); }
+
+/* ----------------------------------------------------------------
+   24. RESPONSIVE BREAKPOINTS
+   768px  → tablets / mid-size screens
+   480px  → small phones
+---------------------------------------------------------------- */
+@media (max-width: 768px) {
+  :root { --nav-w: 260px; }
+
+  /* Sidebar slides off-screen by default; .open slides it in */
+  .sidebar              { transform: translateX(calc(-1 * var(--nav-w))); }
+  .sidebar.open         { transform: translateX(0); }
+
+  /* Main area fills full width */
+  .main-content         { margin-left: 0; }
+
+  /* Show the hamburger icon */
+  .topbar-hamburger     { display: flex; }
+
+  /* Tighter padding on small screens */
+  .page                 { padding: 18px 16px 32px; }
+
+  /* 2-column stat grid on tablets */
+  .stats-grid           { grid-template-columns: 1fr 1fr; }
+
+  /* Single-column charts */
+  .charts-grid          { grid-template-columns: 1fr; }
+
+  /* Full-width forms */
+  .form-grid            { grid-template-columns: 1fr; }
+  .filter-bar .form-input { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  /* Single column on phones */
+  .stats-grid           { grid-template-columns: 1fr; }
+  .stat-card .stat-value{ font-size: 22px; }
+  .topbar               { padding: 0 14px; }
+}
